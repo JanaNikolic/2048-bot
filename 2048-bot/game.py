@@ -64,7 +64,6 @@ class Game2048():
                     s[i] *= 2
                     self.merge_score += s[i]
                     s.pop(i+1)
-                    i -= 1
                 i += 1
             for row in range(len(self.matrix)):
                 if len(s) > 0:
