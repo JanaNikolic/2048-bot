@@ -19,7 +19,7 @@ STATUS_FONT = ("Verdana", 20, "bold")
 
 
 class Board(Frame):
-    def __init__(self, type):
+    def __init__(self):
         Frame.__init__(self)
 
         self.grid()
@@ -33,10 +33,8 @@ class Board(Frame):
         self.hightest_number = 0
         self.init_grid()
         self.init_matrix()
-        self.update_grid_cells()
 
-        self.mainloop()
-    
+        self.update()
     
     def init_grid(self):
         background = Frame(self, bg=BACKGROUND_COLOR_GAME, width=SIZE, height=SIZE)
@@ -73,14 +71,21 @@ class Board(Frame):
             self.matrix.append([0] * 4)
         
 
-    def update_grid_cells(self):
+    def update_grid_cells(self, matrix, score, sum, max):
         for i in range(GRID_LEN):
             for j in range(GRID_LEN):
-                new_number = self.matrix[i][j]
+                new_number = matrix[i][j]
                 if new_number == 0:
                     self.grid_cells[i][j].configure(text="", bg=BACKGROUND_COLOR_CELL_EMPTY)
                 else:
                     self.grid_cells[i][j].configure(text=str(new_number), bg=BACKGROUND_COLOR_DICT[new_number], fg=CELL_COLOR_DICT[new_number])
+        
+        self.score_lb.configure(text="Score: "+str(score))
+
+        self.last_sum_lb.configure(text="Sum of last tiles: "+str(sum))
+
+        self.hightest_number_lb.configure(text="Highest number: "+str(max))
         self.update_idletasks()
 
-game = Board('MC')
+    def close_window(self):
+        self.master.destroy()
