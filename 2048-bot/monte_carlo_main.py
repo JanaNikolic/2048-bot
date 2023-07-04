@@ -6,7 +6,7 @@ from board import Board
 
 NUM_ITERS = 50       
 NUM_TRIALS = 50
-EVAL_METHOD = 0
+EVAL_METHOD = 1
 
 def random_run(game):
     game_copy = copy.deepcopy(game)
@@ -50,6 +50,7 @@ def monte_carlo_run():
         monte_carlo_iter(game)
         game_board.update_grid_cells(game.matrix, game.get_merge_score(), game.get_sum(), game.max_num())
         i += 1
+        print(game)
         
     game_board.close_window()
 
