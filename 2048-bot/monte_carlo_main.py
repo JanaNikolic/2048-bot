@@ -6,7 +6,7 @@ from board import Board
 
 NUM_ITERS = 50       
 NUM_TRIALS = 50
-EVAL_METHOD = 1
+EVAL_METHOD = 2
 
 def random_run(game):
     game_copy = copy.deepcopy(game)
