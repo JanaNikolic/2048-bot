@@ -1,3 +1,4 @@
+import math
 import random
 import numpy as np
 import torch
@@ -19,7 +20,7 @@ epsilon = 0.9  # Exploration rate
 epsilon_decay = 0.9999  # Decay rate for exploration rate
 epsilon_min = 0.01  # Minimum exploration rate END
 target_update = 20  # Number of episodes to update the target network
-num_episodes = 5000  # Number of episodes to train
+num_episodes = 1000  # Number of episodes to train
 
 total_rewards = []
 episodes = []
@@ -78,10 +79,10 @@ class DQNAgent:
 
         self.policy_net.train()
 
-        self.optimizer = optim.Adam(self.policy_net.parameters(), lr=5e-5)
+        self.optimizer = optim.Adam(self.policy_net.parameters(), lr=0.001)
         self.loss_fn = nn.MSELoss()
 
-        self.memory = ReplayMemory(10000) # TODO 50000
+        self.memory = ReplayMemory(50000)
 
         steps_done = 0
 
@@ -194,7 +195,45 @@ for episode in range(1, num_episodes + 1):
     print(f"Episode: {episode}, Total Reward: {total_reward}")
     if episode % 100 == 0:
         agent.save_model()
-    
+
+
+# scores, best_tiles = [], []
+# a = DQNAgent(input_size, output_size, batch_size, gamma, target_update)
+# for i in range(1000):
+#   if i % 100 == 0:
+#     print(f"Iteration {i}")
+#   game = Game2048()
+#   state = np.array(game.matrix).flatten()
+#   finish = False
+#   moved = True
+#   epsilon = max(epsilon_min, epsilon * epsilon_decay)
+#   while not finish:
+#     if not moved:
+#       direction = np.random.randint(4)
+#     else:
+#       direction = a.select_action(state, epsilon)
+
+#     game.make_move(action)
+#     next_state = np.array(game.matrix).flatten()
+
+#     if np.array_equal(state, next_state):
+#         moved = True
+#     else:
+#         moved = False
+
+#     state = np.array(game.matrix).flatten()
+
+#     if not moved:
+#       continue
+      
+#     finish = game.game_end
+
+#   total_score = game.get_merge_score()
+#   best_tile = game.max_num()
+  
+#   scores.append(total_score)
+#   best_tiles.append(best_tile)
+
 
 plt.plot(episodes, total_rewards)
 plt.xlabel('Episode')
@@ -202,8 +241,23 @@ plt.ylabel('Total Reward')
 plt.title('Total Reward vs Episode')
 plt.show()
 
-plt.plot(total_scores, best_tile_list)
-plt.xlabel('Total score')
-plt.ylabel('Best tile')
-plt.title('Total score vs Best tile')
+# plt.plot(total_scores, best_tile_list)
+# plt.xlabel('Total score')
+# plt.ylabel('Best tile')
+# plt.title('Total score vs Best tile')
+# plt.show()
+
+plt.hist(total_scores, bins = 20)
+plt.title("Total score frequency")
+plt.xlabel("Total Score")
+plt.ylabel("Frequency")
+plt.show()
+
+max_power = int(math.log(max(best_tile_list), 2)) + 1
+min_power = int(math.log(min(best_tile_list), 2))
+unique, counts = np.unique(best_tile_list, return_counts=True)
+plt.bar([str(2 ** i) for i in range(min_power, max_power)], counts)
+plt.title("Best tile distribution")
+plt.xlabel("Best tile")
+plt.ylabel("Frequency")
 plt.show()
